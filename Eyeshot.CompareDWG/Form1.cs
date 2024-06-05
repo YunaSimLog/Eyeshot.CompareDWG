@@ -47,12 +47,33 @@ namespace Eyeshot.CompareDWG
         {
             OpenFile(design1, lbBefore, @"../../../Sample\app8.dwg");
             OpenFile(design2, lbAfter, @"../../../Sample\app8mod.dwg");
+
+            CompareAndMark(design1.Entities, design2.Entities);
+
             base.OnLoad(e);
         }
 
         private void CameraChanged(object sender, CameraMoveEventArgs e)
         {
+            if (sender == design1)
+                SysnCamera(design1, design2);
+            else
+                SysnCamera(design2, design1);
+        }
+
+        private void CompareAndMark(EntityList entities1, EntityList entities2)
+        {
             //throw new NotImplementedException();
+        }       
+
+        private void SysnCamera(Design designMovedCamera, Design designCameraToMove)
+        {
+            Camera savedCamera;
+            designMovedCamera.SaveView(out savedCamera);
+
+            designCameraToMove.RestoreView(savedCamera);
+            designCameraToMove.AdjustNearAndFarPlanes(); // 카메라 근거리 원거리 조정
+            designCameraToMove.Invalidate();
         }
 
         private void OpenFile(Design design, Label lable, string filePath = null)
