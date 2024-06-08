@@ -62,6 +62,32 @@ namespace Eyeshot.CompareDWG
                 SysnCamera(design2, design1);
         }
 
+        private void btnBefore_Click(object sender, EventArgs e)
+        {
+            ColorCompareAndMask(design1, lbBefore, design2);
+        }
+
+        private void btnAfter_Click(object sender, EventArgs e)
+        {
+            ColorCompareAndMask(design2, lbBefore, design1);
+        }
+
+        private void ColorCompareAndMask(Design designForFile, Label pathLabel, Design designToColor)
+        {
+            OpenFile(designForFile, pathLabel);
+
+            if (design1.Entities.Count == 0 || design2.Entities.Count == 0)
+                return;
+
+            CompareAndMark(design1.Entities,design2.Entities);
+
+            design1.ZoomFit();
+            design2.ZoomFit();
+
+            design1.Invalidate();
+            design2.Invalidate();
+        }
+
         private void CompareAndMark(EntityList entities1, EntityList entities2)
         {
             bool[] equalEntitiesInV2 = new bool[entities2.Count];
